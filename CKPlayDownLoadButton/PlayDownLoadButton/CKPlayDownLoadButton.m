@@ -10,29 +10,29 @@
 
 
 #define kRadius self.bounds.size.width/2.0
+#define kDefaultColor [UIColor redColor]
+#define kLoadingColor [UIColor blueColor]
+#define kCompleteColor [UIColor greenColor]
 
 static const CGFloat kBorderWidth = 3.0;
 
-static const NSString *kLoadingCBKey = @"LoadingCallBack";
-static const NSString *kPauseCBKey = @"PauseCallBack";
-static const NSString *kResumeCBKey = @"ResumeCallBack";
+static const NSString *kLoadingCBKey  = @"LoadingCallBack";
+static const NSString *kPauseCBKey    = @"PauseCallBack";
+static const NSString *kResumeCBKey   = @"ResumeCallBack";
 static const NSString *kCompleteCBKey = @"CompleteCallBack";
 
 IB_DESIGNABLE
 @interface CKPlayDownLoadButton ()
 
-@property (nonatomic, strong) IBInspectable UIColor *defaultColor;
-@property (nonatomic, assign) IBInspectable CGFloat borderWidth;
-@property (nonatomic, assign) IBInspectable CGFloat downLoadWidth;
-
 @property (nonatomic, strong) CAShapeLayer *borderShapeLayer;
 @property (nonatomic, strong) CAShapeLayer *downLoadShapeLayer;
 @property (nonatomic, strong) CAShapeLayer *loadingShapeLayer;
-@property (nonatomic, strong) CAShapeLayer *CompleteShapeLayer;
 
 @property (nonatomic, strong) UIBezierPath *downLoadPath;
 @property (nonatomic, strong) UIBezierPath *downLoadingPath;
-@property (nonatomic, strong) UIBezierPath *loadingPath;
+@property (nonatomic, strong) UIBezierPath *loadingBorderPath;
+@property (nonatomic, strong) UIBezierPath *pausePath;
+@property (nonatomic, strong) UIBezierPath *completePath;
 
 @property (nonatomic, assign) CGFloat tempAngle;
 
@@ -48,11 +48,10 @@ IB_DESIGNABLE
 - (void)drawRect:(CGRect)rect {
     [self ck_addBorderLayer];
     [self ck_addDownLoadLayer];
-    
+    [self ck_addLoadingLayer];
 }
 - (void)layoutSubviews {
     self.backgroundColor = [UIColor clearColor];
-//    self.state = CKButtonStateDefault;
     [super layoutSubviews];
 }
 - (UIBezierPath *)downLoadPath {
@@ -95,19 +94,37 @@ IB_DESIGNABLE
     }
     return _downLoadingPath;
 }
-
-- (CAShapeLayer *)CompleteShapeLayer {
-    if (!_CompleteShapeLayer) {
-        _CompleteShapeLayer = [CAShapeLayer layer];
+- (UIBezierPath *)loadingBorderPath {
+    if (!_loadingBorderPath) {
+        _loadingBorderPath = [UIBezierPath bezierPath];
     }
-    return _CompleteShapeLayer;
+    return _loadingBorderPath;
 }
-
-- (UIBezierPath *)loadingPath {
-    if (!_loadingPath) {
-        _loadingPath = [UIBezierPath bezierPath];
+- (UIBezierPath *)pausePath {
+    if (!_pausePath) {
+        _pausePath = [UIBezierPath bezierPath];
+        if (!self.downLoadWidth || self.downLoadWidth == 0) {
+            self.downLoadWidth = kBorderWidth;
+        }
+        [_pausePath moveToPoint:CGPointMake(kRadius * 3/4.0 - self.downLoadWidth/2.0, kRadius/2.0)];
+        [_pausePath addLineToPoint:CGPointMake(kRadius * 3/4.0 - self.downLoadWidth/2.0, kRadius * 3/2.0)];
+        [_pausePath addLineToPoint:CGPointMake(kRadius * 3/2.0, kRadius)];
+        [_pausePath closePath];
     }
-    return _loadingPath;
+    return _pausePath;
+}
+- (UIBezierPath *)completePath {
+    if (!_completePath) {
+        _completePath = [UIBezierPath bezierPath];
+        [_completePath moveToPoint:CGPointMake(kRadius * 1/2.0, kRadius)];
+        [_completePath addLineToPoint:CGPointMake(kRadius * 1/2.0 - self.downLoadWidth * sqrt(2)/2.0, kRadius + self.downLoadWidth * sqrt(2)/2.0)];
+        [_completePath addLineToPoint:CGPointMake(kRadius * 7/8.0, kRadius * 11/8.0 + self.downLoadWidth * sqrt(2))];
+        [_completePath addLineToPoint:CGPointMake(kRadius * 13/8.0 + self.downLoadWidth * sqrt(2)/2.0, kRadius * 5/8.0 + self.downLoadWidth * sqrt(2)/2.0)];
+        [_completePath addLineToPoint:CGPointMake(kRadius * 13/8.0, kRadius * 5/8.0)];
+        [_completePath addLineToPoint:CGPointMake(kRadius * 7/8.0, kRadius * 11/8.0)];
+        [_completePath closePath];
+    }
+    return _completePath;
 }
 
 #pragma mark -  添加圆框
@@ -117,7 +134,12 @@ IB_DESIGNABLE
         CGFloat minSide = MIN(self.bounds.size.width, self.bounds.size.height);
         CGRect borderRect = CGRectMake(0, 0, minSide, minSide);
         _borderShapeLayer.path = [UIBezierPath bezierPathWithOvalInRect:borderRect].CGPath;
-        _borderShapeLayer.strokeColor = self.defaultColor ?  self.defaultColor.CGColor : [UIColor redColor].CGColor;
+        if (self.state == CKButtonStateComplete) {
+             _borderShapeLayer.strokeColor = self.CompleteColor ?  self.CompleteColor.CGColor : kCompleteColor.CGColor;
+        }else {
+             _borderShapeLayer.strokeColor = self.defaultColor ?  self.defaultColor.CGColor : kDefaultColor.CGColor;
+        }
+       
         _borderShapeLayer.lineWidth = self.borderWidth ? self.borderWidth : kBorderWidth;
         _borderShapeLayer.fillColor = [UIColor clearColor].CGColor;
         [self.layer addSublayer:_borderShapeLayer];
@@ -127,8 +149,27 @@ IB_DESIGNABLE
 - (void)ck_addDownLoadLayer {
     if (!_downLoadShapeLayer) {
         _downLoadShapeLayer = [CAShapeLayer layer];
-        _downLoadShapeLayer.path = self.downLoadPath.CGPath;
-        _downLoadShapeLayer.fillColor = self.defaultColor ?  self.defaultColor.CGColor : [UIColor redColor].CGColor;
+        switch (self.state) {
+            case CKButtonStateDefault:
+                _downLoadShapeLayer.path = self.downLoadPath.CGPath;
+                _downLoadShapeLayer.fillColor = self.defaultColor ?  self.defaultColor.CGColor : kDefaultColor.CGColor;
+                break;
+            case CKButtonStatePause:
+                _downLoadShapeLayer.path = self.pausePath.CGPath;
+                _downLoadShapeLayer.fillColor = self.LoadingColor ?  self.LoadingColor.CGColor : kLoadingColor.CGColor;
+                break;
+            case CKButtonStateLoading:
+                _downLoadShapeLayer.path = self.downLoadingPath.CGPath;
+                _downLoadShapeLayer.fillColor = self.LoadingColor ?  self.LoadingColor.CGColor : kLoadingColor.CGColor;
+                break;
+            case CKButtonStateComplete:
+                _downLoadShapeLayer.path = self.completePath.CGPath;
+                _downLoadShapeLayer.fillColor = self.CompleteColor ?  self.CompleteColor.CGColor : kCompleteColor.CGColor;
+                break;
+            default:
+                break;
+        }
+        
         [self.layer addSublayer:_downLoadShapeLayer];
     }
 }
@@ -136,8 +177,9 @@ IB_DESIGNABLE
     if (!_loadingShapeLayer) {
         _loadingShapeLayer = [CAShapeLayer layer];
         _loadingShapeLayer.lineWidth = self.borderWidth ? self.borderWidth : kBorderWidth;
+        _loadingShapeLayer.path = self.loadingBorderPath.CGPath;
         _loadingShapeLayer.fillColor = [UIColor clearColor].CGColor;
-        _loadingShapeLayer.strokeColor = [UIColor blueColor].CGColor;
+        _loadingShapeLayer.strokeColor = self.LoadingColor ? self.LoadingColor.CGColor : kLoadingColor.CGColor;
         [self.layer addSublayer:_loadingShapeLayer];
     }
 }
@@ -164,47 +206,62 @@ IB_DESIGNABLE
 }
 #pragma mark -  点击事件
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [self ck_switchButtonStateFrom:self.downLoadPath toPath:self.downLoadingPath animated:YES];
+    CKButtonStateCallBack callBack = nil;
+    
     if (self.state == CKButtonStateDefault) {
         
-        [self ck_addLoadingLayer];
         self.state = CKButtonStateLoading;
+        [self ck_switchButtonStateFrom:self.downLoadPath toPath:self.downLoadingPath animated:YES];
+        callBack = self.callBackDic[kLoadingCBKey];
+        
     }else if (self.state == CKButtonStateLoading) {
+        
         self.state = CKButtonStatePause;
+        [self ck_switchButtonStateFrom:self.downLoadingPath toPath:self.pausePath animated:YES];
+        callBack = self.callBackDic[kPauseCBKey];
         
     }else if (self.state == CKButtonStatePause) {
-    
-        self.state = CKButtonStateResume;
         
+        self.state = CKButtonStateResume;
+        [self ck_switchButtonStateFrom:self.pausePath toPath:self.downLoadingPath animated:YES];
+        callBack = self.callBackDic[kResumeCBKey];
+    
+    }else if (self.state == CKButtonStateResume) {
+
+        self.state = CKButtonStatePause;
+        [self ck_switchButtonStateFrom:self.downLoadingPath toPath:self.pausePath animated:YES];
+        callBack = self.callBackDic[kPauseCBKey];
+        
+    }
+    if (callBack) {
+        callBack();
     }
 }
 
 #pragma mark -  处理状
 - (void)setState:(CKButtonState)state {
     _state = state;
-    CKButtonStateCallBack callBack = nil;
+   
     switch (state) {
         case CKButtonStateDefault:
+            self.downLoadShapeLayer.path = self.downLoadPath.CGPath;
             break;
         case CKButtonStateLoading:
-            callBack = self.callBackDic[kLoadingCBKey];
             break;
         case CKButtonStatePause:
-            callBack = self.callBackDic[kPauseCBKey];
             break;
         case CKButtonStateResume:
-            callBack = self.callBackDic[kResumeCBKey];
             break;
         case CKButtonStateComplete:
+            [self ck_switchButtonStateFrom:self.downLoadingPath toPath:self.completePath animated:YES];
             [self.loadingShapeLayer removeFromSuperlayer];
-            callBack = self.callBackDic[kCompleteCBKey];
+            self.borderShapeLayer.strokeColor = self.CompleteColor ? self.CompleteColor.CGColor : kCompleteColor.CGColor;
+            self.downLoadShapeLayer.fillColor = self.CompleteColor ? self.CompleteColor.CGColor : kCompleteColor.CGColor;
             break;
         default:
             break;
     }
-    if (callBack) {
-        callBack();
-    }
+    
     
 }
 #pragma mark -  设置loading值
@@ -215,16 +272,25 @@ IB_DESIGNABLE
     }
     _value = value;
     CGFloat endAngle = 2 * M_PI * value/self.maxValue;
-    if (endAngle == 2 * M_PI) {
+    if (endAngle >= 2 *M_PI) {
         self.state = CKButtonStateComplete;
+        CKButtonStateCallBack callBack = self.callBackDic[kCompleteCBKey];
+        if (callBack) {
+            callBack();
+        }
         return;
     }
+    if (value && self.state == CKButtonStateDefault) {
+        self.state = CKButtonStatePause;
+        [self ck_switchButtonStateFrom:self.pausePath toPath:self.downLoadingPath animated:YES];
+        self.downLoadShapeLayer.fillColor = self.LoadingColor ? self.LoadingColor.CGColor : kLoadingColor.CGColor;
+    }
     CGPoint center = CGPointMake(kRadius, kRadius);
-    [self.loadingPath removeAllPoints];
-    [self.loadingPath addArcWithCenter:center radius:kRadius startAngle:0.0 endAngle:endAngle clockwise:YES];
-    self.loadingShapeLayer.path = self.loadingPath.CGPath;
+    [self.loadingBorderPath removeAllPoints];
+    [self.loadingBorderPath addArcWithCenter:center radius:kRadius startAngle:0.0 - M_PI / 2.0  endAngle:endAngle - M_PI / 2.0 clockwise:YES];
+    self.loadingShapeLayer.path = self.loadingBorderPath.CGPath;
 }
-
+#pragma mark -  外部调用方法
 - (void)ck_setPlayButtonWithLoading:(CKButtonStateCallBack)loading pause:(CKButtonStateCallBack)pause resume:(CKButtonStateCallBack)resume complete:(CKButtonStateCallBack)complete {
     self.callBackDic = [NSMutableDictionary dictionary];
     if (loading) {
