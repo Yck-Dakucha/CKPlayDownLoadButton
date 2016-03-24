@@ -17,7 +17,7 @@ support：
 	`CKPlayDownLoadButton *playButton = [[CKPlayDownLoadButton alloc] initWithFrame:CGRectMake(10, 10, 40, 40)];`
 	or  creat a UIView(subClassOFCKPlayDownLoadButton)   
 	
-	![](https://raw.githubusercontent.com/Yck-Dakucha/CKPlayDownLoadButton/master/creatWithXib.png)  
+	![](https://raw.githubusercontent.com/Yck-Dakucha/CKPlayDownLoadButton/master/Picture/creatWithXib.png)  
 	
 * Attribute  
 
@@ -78,3 +78,5 @@ typedef void(^CKButtonStateCallBack)(CGFloat progressValue);
                            complete:(CKButtonStateCallBack)complete;
 
 ```  
+you can set the attributes at xib/Storyboard
+![](https://raw.githubusercontent.com/Yck-Dakucha/CKPlayDownLoadButton/master/Picture/attributes.png)
