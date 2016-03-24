@@ -60,6 +60,9 @@
     self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(downLoading) userInfo:nil repeats:YES];
     [self.timer setFireDate:[NSDate distantFuture]];
     [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSDefaultRunLoopMode];
+    
+    
+    CKPlayDownLoadButton *playButton = [[CKPlayDownLoadButton alloc] initWithFrame:CGRectMake(10, 10, 40, 40)];
 }
 
 - (void)downLoading {
