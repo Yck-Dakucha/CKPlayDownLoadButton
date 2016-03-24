@@ -237,7 +237,7 @@ IB_DESIGNABLE
         
     }
     if (callBack) {
-        callBack();
+        callBack(self.value);
     }
 }
 
@@ -272,7 +272,7 @@ IB_DESIGNABLE
         self.state = CKButtonStateComplete;
         CKButtonStateCallBack callBack = self.callBackDic[kCompleteCBKey];
         if (callBack) {
-            callBack();
+            callBack(self.value);
         }
         return;
     }

@@ -8,12 +8,14 @@
 
 #import "ViewController.h"
 #import "CKPlayDownLoadButton.h"
+#import "CKPlayCell.h"
 
 @interface ViewController ()
-@property (weak, nonatomic) IBOutlet CKPlayDownLoadButton *playButton;
-@property (weak, nonatomic) IBOutlet UISlider *slider;
 
-@property (nonatomic, strong) CKPlayDownLoadButton *codebutton;
+@property (nonatomic, strong) NSMutableArray *dataArray;
+
+
+
 
 @end
 
@@ -22,63 +24,92 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    
-    self.codebutton = [[CKPlayDownLoadButton alloc] initWithFrame:CGRectMake(100, 100, 120, 200)];
-    [self.view addSubview:self.codebutton];
-    
-    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerbegin) userInfo:nil repeats:YES];
-    [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
-//    [timer setFireDate:[NSDate distantFuture]];
-    
-    [self.codebutton setState:CKButtonStateResume];
-    self.codebutton.maxValue = 100;
-    self.codebutton.value = 14;
-    [self.codebutton ck_setPlayButtonWithLoading:^{
-        [timer setFireDate:[NSDate date]];
-    }pause:^{
-        [timer setFireDate:[NSDate distantFuture]];
-    }resume:^{
-        [timer setFireDate:[NSDate date]];
-    } complete:^{
-        [timer invalidate];
-        NSLog(@"code >>> complete");
-    }];
-    
-    __weak typeof(self) weakSelf = self;
-    [self.playButton ck_setPlayButtonWithLoading:^{
-        [UIView animateWithDuration:0.3 animations:^{
-            weakSelf.slider.alpha = 1.0;
-        }];
-        NSLog(@"Loading");
-    } pause:^{
-        [UIView animateWithDuration:0.3 animations:^{
-            weakSelf.slider.alpha = 0;
-        }];
-        NSLog(@"Pause");
-    } resume:^{
-        [UIView animateWithDuration:0.3 animations:^{
-            weakSelf.slider.alpha = 1.0;
-        }];
-        NSLog(@"Resume");
-    } complete:^{
-        [UIView animateWithDuration:0.3 animations:^{
-            weakSelf.slider.alpha = 0.0;
-        }];
-        NSLog(@"Complete");
-    }];
-}
 
-- (void)timerbegin {
-    self.codebutton.value += 5;
+    self.dataArray = [NSMutableArray arrayWithArray:@[
+                                                      @{
+                                                        @"title":@"1",
+                                                        @"downLoadID":@"1"
+                                                          },
+                                                      @{
+                                                          @"title":@"2",
+                                                          @"downLoadID":@"2"
+                                                          },
+                                                      @{
+                                                          @"title":@"3",
+                                                          @"downLoadID":@"3"
+                                                          },
+                                                      @{
+                                                          @"title":@"4",
+                                                          @"downLoadID":@"4"
+                                                          },
+                                                      @{
+                                                          @"title":@"5",
+                                                          @"downLoadID":@"5"
+                                                          },
+                                                      @{
+                                                          @"title":@"6",
+                                                          @"downLoadID":@"6"
+                                                          },
+                                                      @{
+                                                          @"title":@"7",
+                                                          @"downLoadID":@"7"
+                                                          },
+                                                      @{
+                                                          @"title":@"8",
+                                                          @"downLoadID":@"8"
+                                                          },
+                                                      @{
+                                                          @"title":@"9",
+                                                          @"downLoadID":@"9"
+                                                          },
+                                                      @{
+                                                          @"title":@"10",
+                                                          @"downLoadID":@"10"
+                                                          },
+                                                      ]];
+    
+    
+    
+    
+        
 }
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-- (IBAction)sliderValueChanged:(UISlider *)sender {
-    self.playButton.value = sender.value;
+
+
+#pragma mark -  tableView dataSource Delegate
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.dataArray.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString *identifier = @"PlayDownLoadCell";
+    CKPlayCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    CKPlayCell *playCell = (CKPlayCell *)cell;
+    NSDictionary *cellModel = self.dataArray[indexPath.row];
+    [playCell ck_setDownLoadInfoWithDic:cellModel];
+    
+    [playCell.playButton ck_setPlayButtonWithLoading:^(CGFloat progressValue) {
+        [playCell ck_creatADownLoad];
+    } pause:^(CGFloat progressValue) {
+        [playCell ck_pause];
+    } resume:^(CGFloat progressValue) {
+        [playCell ck_resume];
+    } complete:^(CGFloat progressValue) {
+        NSLog(@" %@ >>>  comlpete!!",cellModel[@"title"]);
+    }];
+    
 }
 
 @end

@@ -17,6 +17,7 @@
 		F485DC8F1C9F8CB900EF50BD /* CKPlayDownLoadButtonUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = F485DC8E1C9F8CB900EF50BD /* CKPlayDownLoadButtonUITests.m */; };
 		F485DCA11C9F8D4900EF50BD /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F485DCA01C9F8D4900EF50BD /* AppDelegate.m */; };
 		F485DCA51C9F8E8000EF50BD /* CKPlayDownLoadButton.m in Sources */ = {isa = PBXBuildFile; fileRef = F485DCA41C9F8E8000EF50BD /* CKPlayDownLoadButton.m */; };
+		F4ACB05B1CA3C8310007F8AC /* CKPlayCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ACB05A1CA3C8310007F8AC /* CKPlayCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,8 @@
 		F485DCA01C9F8D4900EF50BD /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		F485DCA31C9F8E8000EF50BD /* CKPlayDownLoadButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKPlayDownLoadButton.h; sourceTree = "<group>"; };
 		F485DCA41C9F8E8000EF50BD /* CKPlayDownLoadButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKPlayDownLoadButton.m; sourceTree = "<group>"; };
+		F4ACB0591CA3C8310007F8AC /* CKPlayCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKPlayCell.h; sourceTree = "<group>"; };
+		F4ACB05A1CA3C8310007F8AC /* CKPlayCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKPlayCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +112,7 @@
 				F485DC9E1C9F8D4900EF50BD /* App */,
 				F485DCA21C9F8D8400EF50BD /* PlayDownLoadButton */,
 				F485DC9D1C9F8D1900EF50BD /* StoryBoard */,
+				F4ACB0581CA3C7FF0007F8AC /* Cell */,
 				F485DC6F1C9F8CB900EF50BD /* ViewController.h */,
 				F485DC701C9F8CB900EF50BD /* ViewController.m */,
 				F4567E5E1CA295CE002B413E /* Images.xcassets */,
@@ -170,6 +174,15 @@
 				F485DCA41C9F8E8000EF50BD /* CKPlayDownLoadButton.m */,
 			);
 			path = PlayDownLoadButton;
+			sourceTree = "<group>";
+		};
+		F4ACB0581CA3C7FF0007F8AC /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				F4ACB0591CA3C8310007F8AC /* CKPlayCell.h */,
+				F4ACB05A1CA3C8310007F8AC /* CKPlayCell.m */,
+			);
+			name = Cell;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -305,6 +318,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F485DCA11C9F8D4900EF50BD /* AppDelegate.m in Sources */,
+				F4ACB05B1CA3C8310007F8AC /* CKPlayCell.m in Sources */,
 				F485DCA51C9F8E8000EF50BD /* CKPlayDownLoadButton.m in Sources */,
 				F485DC711C9F8CB900EF50BD /* ViewController.m in Sources */,
 				F485DC6B1C9F8CB900EF50BD /* main.m in Sources */,

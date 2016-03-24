@@ -16,7 +16,7 @@ typedef NS_ENUM(NSInteger,CKButtonState) {
     CKButtonStateComplete  //下载完成
 };
 
-typedef void(^CKButtonStateCallBack)();
+typedef void(^CKButtonStateCallBack)(CGFloat progressValue);
 
 @interface CKPlayDownLoadButton : UIView
 
