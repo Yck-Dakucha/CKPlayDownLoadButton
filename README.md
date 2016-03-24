@@ -78,5 +78,5 @@ typedef void(^CKButtonStateCallBack)(CGFloat progressValue);
                            complete:(CKButtonStateCallBack)complete;
 
 ```  
-you can set the attributes at xib/Storyboard
+you can set the attributes at xib/Storyboard  
 ![](https://raw.githubusercontent.com/Yck-Dakucha/CKPlayDownLoadButton/master/Picture/attributes.png)
