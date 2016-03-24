@@ -9,7 +9,7 @@
 #import "CKPlayDownLoadButton.h"
 
 
-#define kRadius self.bounds.size.width/2.0
+#define kRadius MIN(self.bounds.size.width, self.bounds.size.height)/2.0
 #define kDefaultColor [UIColor redColor]
 #define kLoadingColor [UIColor blueColor]
 #define kCompleteColor [UIColor greenColor]
@@ -91,6 +91,7 @@ IB_DESIGNABLE
         [_downLoadingPath addLineToPoint:CGPointMake(kRadius * 5/4.0 + self.downLoadWidth/2.0, kRadius * 3/2.0)];
         [_downLoadingPath addLineToPoint:CGPointMake(kRadius * 5/4.0 + self.downLoadWidth/2.0, kRadius/2.0)];
         [_downLoadingPath closePath];
+        
     }
     return _downLoadingPath;
 }
@@ -167,6 +168,8 @@ IB_DESIGNABLE
                 _downLoadShapeLayer.fillColor = self.CompleteColor ?  self.CompleteColor.CGColor : kCompleteColor.CGColor;
                 break;
             default:
+                _downLoadShapeLayer.path = self.downLoadingPath.CGPath;
+                _downLoadShapeLayer.fillColor = self.LoadingColor ?  self.LoadingColor.CGColor : kLoadingColor.CGColor;
                 break;
         }
         
@@ -246,12 +249,6 @@ IB_DESIGNABLE
         case CKButtonStateDefault:
             self.downLoadShapeLayer.path = self.downLoadPath.CGPath;
             break;
-        case CKButtonStateLoading:
-            break;
-        case CKButtonStatePause:
-            break;
-        case CKButtonStateResume:
-            break;
         case CKButtonStateComplete:
             [self ck_switchButtonStateFrom:self.downLoadingPath toPath:self.completePath animated:YES];
             [self.loadingShapeLayer removeFromSuperlayer];
@@ -259,10 +256,9 @@ IB_DESIGNABLE
             self.downLoadShapeLayer.fillColor = self.CompleteColor ? self.CompleteColor.CGColor : kCompleteColor.CGColor;
             break;
         default:
+            self.downLoadShapeLayer.fillColor = self.LoadingColor ? self.LoadingColor.CGColor : kLoadingColor.CGColor;
             break;
     }
-    
-    
 }
 #pragma mark -  设置loading值
 

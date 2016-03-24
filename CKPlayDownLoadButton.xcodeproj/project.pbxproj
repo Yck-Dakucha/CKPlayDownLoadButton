@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F4567E5F1CA295CE002B413E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4567E5E1CA295CE002B413E /* Images.xcassets */; };
 		F485DC6B1C9F8CB900EF50BD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F485DC6A1C9F8CB900EF50BD /* main.m */; };
 		F485DC711C9F8CB900EF50BD /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F485DC701C9F8CB900EF50BD /* ViewController.m */; };
 		F485DC741C9F8CB900EF50BD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F485DC721C9F8CB900EF50BD /* Main.storyboard */; };
@@ -36,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F4567E5E1CA295CE002B413E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		F485DC661C9F8CB900EF50BD /* CKPlayDownLoadButton.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CKPlayDownLoadButton.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F485DC6A1C9F8CB900EF50BD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		F485DC6F1C9F8CB900EF50BD /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 				F485DC9D1C9F8D1900EF50BD /* StoryBoard */,
 				F485DC6F1C9F8CB900EF50BD /* ViewController.h */,
 				F485DC701C9F8CB900EF50BD /* ViewController.m */,
+				F4567E5E1CA295CE002B413E /* Images.xcassets */,
 				F485DC691C9F8CB900EF50BD /* Supporting Files */,
 			);
 			path = CKPlayDownLoadButton;
@@ -274,6 +277,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F485DC791C9F8CB900EF50BD /* LaunchScreen.storyboard in Resources */,
+				F4567E5F1CA295CE002B413E /* Images.xcassets in Resources */,
 				F485DC761C9F8CB900EF50BD /* Assets.xcassets in Resources */,
 				F485DC741C9F8CB900EF50BD /* Main.storyboard in Resources */,
 			);

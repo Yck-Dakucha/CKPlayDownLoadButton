@@ -28,9 +28,9 @@
     
     NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerbegin) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
-    [timer setFireDate:[NSDate distantFuture]];
+//    [timer setFireDate:[NSDate distantFuture]];
     
-    [self.codebutton setState:CKButtonStateDefault];
+    [self.codebutton setState:CKButtonStateResume];
     self.codebutton.maxValue = 100;
     self.codebutton.value = 14;
     [self.codebutton ck_setPlayButtonWithLoading:^{

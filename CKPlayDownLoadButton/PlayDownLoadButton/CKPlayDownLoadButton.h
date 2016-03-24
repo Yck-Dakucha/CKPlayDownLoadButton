@@ -22,7 +22,7 @@ typedef void(^CKButtonStateCallBack)();
 
 @property (nonatomic, assign) CKButtonState state;
 /**
- *  数据总量
+ *  数据总量,必须设置
  */
 @property (nonatomic, assign) IBInspectable CGFloat maxValue;
 /**
