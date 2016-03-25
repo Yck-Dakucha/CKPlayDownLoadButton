@@ -49,7 +49,7 @@ IB_DESIGNABLE
     [self ck_addBorderLayer];
     [self ck_addDownLoadLayer];
     [self ck_addLoadingLayer];
-}
+    }
 - (void)layoutSubviews {
     self.backgroundColor = [UIColor clearColor];
     [super layoutSubviews];
@@ -98,6 +98,7 @@ IB_DESIGNABLE
 - (UIBezierPath *)loadingBorderPath {
     if (!_loadingBorderPath) {
         _loadingBorderPath = [UIBezierPath bezierPath];
+        [_loadingBorderPath addArcWithCenter:CGPointMake(kRadius, kRadius) radius:kRadius startAngle:0.0 - M_PI / 2.0  endAngle:2 * M_PI - M_PI / 2.0 clockwise:YES];
     }
     return _loadingBorderPath;
 }
@@ -183,6 +184,7 @@ IB_DESIGNABLE
         _loadingShapeLayer.path = self.loadingBorderPath.CGPath;
         _loadingShapeLayer.fillColor = [UIColor clearColor].CGColor;
         _loadingShapeLayer.strokeColor = self.LoadingColor ? self.LoadingColor.CGColor : kLoadingColor.CGColor;
+        _loadingShapeLayer.strokeEnd = self.maxValue ? self.value/self.maxValue : 0;
         [self.layer addSublayer:_loadingShapeLayer];
     }
 }
@@ -281,10 +283,10 @@ IB_DESIGNABLE
         [self ck_switchButtonStateFrom:self.pausePath toPath:self.downLoadingPath animated:YES];
         self.downLoadShapeLayer.fillColor = self.LoadingColor ? self.LoadingColor.CGColor : kLoadingColor.CGColor;
     }
-    CGPoint center = CGPointMake(kRadius, kRadius);
-    [self.loadingBorderPath removeAllPoints];
-    [self.loadingBorderPath addArcWithCenter:center radius:kRadius startAngle:0.0 - M_PI / 2.0  endAngle:endAngle - M_PI / 2.0 clockwise:YES];
-    self.loadingShapeLayer.path = self.loadingBorderPath.CGPath;
+    [CATransaction begin];
+    [CATransaction setValue:(id)kCFBooleanFalse forKey:kCATransactionDisableActions];
+    self.loadingShapeLayer.strokeEnd = value/self.maxValue;
+    [CATransaction commit];
 }
 #pragma mark -  外部调用方法
 - (void)ck_setPlayButtonWithLoading:(CKButtonStateCallBack)loading pause:(CKButtonStateCallBack)pause resume:(CKButtonStateCallBack)resume complete:(CKButtonStateCallBack)complete {

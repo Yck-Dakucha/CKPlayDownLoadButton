@@ -22,7 +22,7 @@ support：
 * Attribute  
 
 ```
-	typedef NS_ENUM(NSInteger,CKButtonState) {
+typedef NS_ENUM(NSInteger,CKButtonState) {
     CKButtonStateDefault,  //未下载状态
     CKButtonStateLoading,  //下载中
     CKButtonStatePause,    //暂停
